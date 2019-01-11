@@ -36,10 +36,11 @@ class Activity(models.Model):
         members = self.members.count()
         #TODO bg选取
         picture_url = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1546847744370&di=f0d19b4627305300f5a9f14d926f2bbc&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20181118%2Fa15713566c0f43c38abb84f9481f99f0.jpeg'
+        status=1 if self.status == True else 0
         return dict(
             id=self.id,
             bg=picture_url,
-            status=self.status,
+            status=status,
             address=self.address,
             title=self.title,
             detail=self.detail,
@@ -51,6 +52,7 @@ class Activity(models.Model):
         )
     def to_one_dict(self):
         owner = self.organizer.to_dict()
+        status=1 if self.status == True else 0
         members = []
         for m in self.members.all():
             members.append(m.to_dict())
@@ -58,7 +60,7 @@ class Activity(models.Model):
         return dict(
             id=self.id,
             bg=picture_url,
-            status=self.status,
+            status=status,
             address=self.address,
             title=self.title,
             detail=self.detail,
