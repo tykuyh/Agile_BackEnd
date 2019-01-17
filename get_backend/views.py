@@ -279,3 +279,27 @@ def sign(request, aid, uid, mid):
             "param": activity.sign_dict()
         }
     return JsonResponse(dict(res))
+
+def getMembers(request, aid):
+    activity = Activity.objects.get(id=aid)
+    members = activity.members.all()
+    signed_members = activity.signed_members
+    param = []
+    for m in members:
+        openid = m.id
+        isAttend = signed_members.filter(id=openid)
+        if not isAttend:
+            attend = False
+        else:
+            attend = True
+        temp = {}
+        temp["openid"] = openid
+        temp["attend"] = attend
+        param.append(temp)
+    res = {
+        "status": True,
+        "code": 200,
+        "reason": '',
+        "param": param
+    }
+    return JsonResponse(res)
