@@ -19,7 +19,8 @@ from get_backend import views as get_backend_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('user/login/<str:code>', get_backend_views.wechat_login),
+    path('user/login/<str:code>/', get_backend_views.wechat_login),
+    path('user/update/<str:ownerId>/', get_backend_views.userInfoUpdate),
     path('search/<str:keyword>/',get_backend_views.search),
     path('attend/<str:aid>/<str:uid>/<str:mid>/', get_backend_views.sign),
     path('members/<str:aid>/', get_backend_views.getMembers),

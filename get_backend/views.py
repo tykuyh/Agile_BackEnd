@@ -66,6 +66,32 @@ def wechat_login(request, code):
         allres["reason"] = res["errmsg"]
         return JsonResponse(dict(allres))
 
+def userInfoUpdate(request, ownerId):
+    users = User.objects.filter(id=ownerId)
+    if users is None:
+        print("user is None_userInfoUpdate")
+        res = {
+            "status": False,
+            "code": 400,
+            "reason": '',
+            "param":None
+        }
+    else:
+        for user in users:
+            print("user is get_userInfoUpdate")
+            nickname = json.loads(request.body)["nickname"]
+            face = json.loads(request.body)["face"]
+            user.nickname = nickname
+            user.face = face
+            user.save()
+            res = {
+                "status": True,
+                "code": 200,
+                "reason": '',
+                "param": None
+            }
+    return JsonResponse(dict(res))
+
 def getActivities(request, pageNo, pageSize):
     activities=Activity.objects.order_by("create_Date")
     param=[]
@@ -287,6 +313,13 @@ def getMembers(request, aid):
     param = []
     for m in members:
         openid = m.id
+        user = User.objects.get(id=openid)
+        if user is None:
+            print("not find")
+        else :
+            print("find user_getMembers")
+        nickname = user.nickname
+        face = user.face
         isAttend = signed_members.filter(id=openid)
         if not isAttend:
             attend = False
@@ -294,6 +327,8 @@ def getMembers(request, aid):
             attend = True
         temp = {}
         temp["openid"] = openid
+        temp["nickname"] = nickname
+        temp["face"] = face
         temp["attend"] = attend
         param.append(temp)
     res = {
